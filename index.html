@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramadan Companion - Erbil</title>
+    <style>
+        :root { --gold: #D4AF37; --navy: #0A192F; --dark-card: #112240; --text: #E6F1FF; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--navy); color: var(--text); padding: 20px; display: flex; flex-direction: column; align-items: center; transition: all 0.3s; }
+        
+        /* Language Bar with Flags */
+        .lang-bar { margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+        .lang-btn { 
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--gold); color: var(--gold); 
+            padding: 10px 18px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: bold;
+        }
+        .lang-btn.active { background: var(--gold); color: var(--navy); }
+        .flag-icon { width: 24px; height: 16px; border-radius: 2px; object-fit: cover; border: 0.5px solid rgba(255,255,255,0.2); }
+
+        .card { background: var(--dark-card); padding: 20px; border-radius: 15px; width: 100%; max-width: 500px; margin-bottom: 20px; border-top: 4px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .rtl { direction: rtl; text-align: right; }
+        .ltr { direction: ltr; text-align: left; }
+        
+        /* Grid & Progress */
+        .fasting-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+        .day-box { aspect-ratio: 1; border: 1px solid #233554; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; }
+        .day-box.completed { background: var(--gold); color: var(--navy); font-weight: bold; border-color: var(--gold); }
+        .progress-container { background: #233554; border-radius: 10px; height: 12px; margin: 15px 0; overflow: hidden; }
+        .progress-bar { background: var(--gold); height: 100%; width: 0%; transition: width 0.4s; }
+        
+        input[type="number"] { background: transparent; border: 1px solid var(--gold); color: white; padding: 5px; border-radius: 5px; width: 60px; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="lang-bar">
+        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">
+            <img src="https://flagcdn.com/w40/us.png" class="flag-icon"> English
+        </button>
+        <button class="lang-btn" id="btn-ar" onclick="setLang('ar')">
+            <img src="https://flagcdn.com/w40/iq.png" class="flag-icon"> العربية
+        </button>
+        <button class="lang-btn" id="btn-ku" onclick="setLang('ku')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Flag_of_Kurdistan.svg" class="flag-icon"> کوردی
+        </button>
+    </div>
+
+    <h1 id="main-title" style="color: var(--gold); text-align: center;">🌙 Erbil Ramadan 2026</h1>
+
+    <div class="card">
+        <h2 id="h-times">Erbil Schedule</h2>
+        <div style="display: flex; justify-content: space-around; text-align: center;">
+            <div><small id="l-suhoor">Suhoor Ends</small><br><strong style="font-size: 1.3rem; color: var(--gold);">05:22 AM</strong></div>
+            <div style="border-left: 1px solid #233554;"></div>
+            <div><small id="l-iftar">Iftar (Maghrib)</small><br><strong style="font-size: 1.3rem; color: var(--gold);">05:48 PM</strong></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 id="h-quran">Quran Progress</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span id="l-page">Current Page</span>
+            <input type="number" id="curPage" value="0" oninput="saveData()">
+        </div>
+        <div class="progress-container"><div id="qBar" class="progress-bar"></div></div>
+        <p style="font-size: 0.8rem; opacity: 0.8; text-align: center;" id="l-goal-info">Goal: 604 Pages</p>
+    </div>
+
+    <div class="card">
+        <h2 id="h-fast">Fasting Journal</h2>
+        <div class="fasting-grid" id="fastingGrid"></div>
+        <p style="text-align: right; font-size: 0.9rem; margin-top: 10px; color: var(--gold);" id="fastingStat">0/30</p>
+    </div>
+
+    <script>
+        const translations = {
+            en: { title: "🌙 Erbil Ramadan 2026", times: "Erbil Schedule", suhoor: "Suhoor Ends", iftar: "Iftar (Maghrib)", quran: "Quran Progress", page: "Current Page", fast: "Fasting Journal", goal: "Goal: 604 Pages" },
+            ar: { title: "🌙 رمضان أربيل ٢٠٢٦", times: "مواقيت أربيل", suhoor: "نهاية السحور", iftar: "الإفطار (المغرب)", quran: "ختم القرآن", page: "الصفحة الحالية", fast: "سجل الصيام", goal: "الهدف: ٦٠٤ صفحة" },
+            ku: { title: "🌙 ڕەمەزانی هەولێر ٢٠٢٦", times: "خشتەی هەولێر", suhoor: "کۆتایی پاششێو", iftar: "بەربانگ (مەغریب)", quran: "خاتمەی قورئان", page: "لاپەڕەی ئێستا", fast: "ڕۆژژمێری ڕۆژوو", goal: "ئامانج: ٦٠٤ لاپەڕە" }
+        };
+
+        function setLang(lang) {
+            const t = translations[lang];
+            document.getElementById('main-title').innerText = t.title;
+            document.getElementById('h-times').innerText = t.times;
+            document.getElementById('l-suhoor').innerText = t.suhoor;
+            document.getElementById('l-iftar').innerText = t.iftar;
+            document.getElementById('h-quran').innerText = t.quran;
+            document.getElementById('l-page').innerText = t.page;
+            document.getElementById('h-fast').innerText = t.fast;
+            document.getElementById('l-goal-info').innerText = t.goal;
+            
+            document.body.className = (lang === 'en' ? 'ltr' : 'rtl');
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + lang).classList.add('active');
+            localStorage.setItem('ramadan_lang', lang);
+        }
+
+        // Logic for persistence (Same as Order Hub / Tuition Tracker)
+        let fastedDays = JSON.parse(localStorage.getItem('ramadan_fasts')) || [];
+        function initGrid() {
+            const grid = document.getElementById('fastingGrid');
+            grid.innerHTML = '';
+            for (let i = 1; i <= 30; i++) {
+                const div = document.createElement('div');
+                div.className = `day-box ${fastedDays.includes(i) ? 'completed' : ''}`;
+                div.innerText = i;
+                div.onclick = () => {
+                    if(fastedDays.includes(i)) fastedDays = fastedDays.filter(d => d !== i);
+                    else fastedDays.push(i);
+                    localStorage.setItem('ramadan_fasts', JSON.stringify(fastedDays));
+                    initGrid();
+                };
+                grid.appendChild(div);
+            }
+            document.getElementById('fastingStat').innerText = `${fastedDays.length}/30`;
+        }
+
+        function saveData() {
+            const page = document.getElementById('curPage').value;
+            localStorage.setItem('ramadan_page', page);
+            // Using Math.min(..., 100) to ensure the bar stays perfect
+            document.getElementById('qBar').style.width = Math.min((page / 604 * 100), 100) + "%";
+        }
+
+        window.onload = () => {
+            setLang(localStorage.getItem('ramadan_lang') || 'en');
+            document.getElementById('curPage').value = localStorage.getItem('ramadan_page') || 0;
+            saveData();
+            initGrid();
+        };
+    </script>
+</body>
+</html>
