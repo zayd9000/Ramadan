@@ -18,7 +18,10 @@
         .rtl { direction: rtl; text-align: right; }
         .ltr { direction: ltr; text-align: left; }
         
-        /* Quran & Fasting Grid */
+        /* Countdown Header Styling */
+        .countdown-big { font-size: 3.5rem; font-weight: bold; color: var(--gold); line-height: 1; margin: 10px 0; }
+        
+        /* Grid & Inputs */
         .fasting-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
         .day-box { aspect-ratio: 1; border: 1px solid #233554; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; }
         .day-box.completed { background: var(--gold); color: var(--navy); font-weight: bold; }
@@ -27,7 +30,7 @@
         .progress-bar { background: var(--gold); height: 100%; width: 0%; transition: width 0.4s; }
         
         .check-group { display: flex; justify-content: space-between; text-align: center; font-size: 0.75rem; margin-top: 15px; }
-        input[type="number"] { background: transparent; border: 1px solid var(--gold); color: white; padding: 5px; border-radius: 5px; width: 60px; text-align: center; }
+        input[type="number"] { background: transparent; border: 1px solid var(--gold); color: white; padding: 5px; border-radius: 5px; width: 60px; text-align: center; font-weight: bold; }
         .dua-text { font-style: italic; border-left: 3px solid var(--gold); padding-left: 15px; margin-top: 10px; }
     </style>
 </head>
@@ -39,7 +42,11 @@
         <button class="lang-btn" id="btn-ku" onclick="setLang('ku')"><img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Flag_of_Kurdistan.svg" class="flag-icon"> کوردی</button>
     </div>
 
-    <h1 id="main-title" style="color: var(--gold); text-align: center;">🌙 Erbil Ramadan 2026</h1>
+    <div class="card" style="text-align: center; background: linear-gradient(145deg, #112240, #1a3055);">
+        <h2 id="countdown-label" style="font-size: 1rem; margin-bottom: 0;">Days Until Ramadan</h2>
+        <div id="big-days-left" class="countdown-big">10</div>
+        <p id="countdown-subtext" style="font-size: 0.8rem; opacity: 0.8;">Starts: Feb 18, 2026</p>
+    </div>
 
     <div class="card">
         <h2 id="h-dua">Dua of the Moment</h2>
@@ -52,9 +59,9 @@
     <div class="card">
         <h2 id="h-times">Erbil Schedule</h2>
         <div style="display: flex; justify-content: space-around; text-align: center;">
-            <div><small id="l-suhoor">Suhoor Ends</small><br><strong style="font-size: 1.2rem; color: var(--gold);">05:22 AM</strong></div>
+            <div><small id="l-suhoor">Suhoor Ends</small><br><strong style="font-size: 1.3rem; color: var(--gold);">05:22 AM</strong></div>
             <div style="border-left: 1px solid #233554;"></div>
-            <div><small id="l-iftar">Iftar (Maghrib)</small><br><strong style="font-size: 1.2rem; color: var(--gold);">05:48 PM</strong></div>
+            <div><small id="l-iftar">Iftar (Maghrib)</small><br><strong style="font-size: 1.3rem; color: var(--gold);">05:48 PM</strong></div>
         </div>
     </div>
 
@@ -73,6 +80,7 @@
             <div><input type="checkbox" class="q-chk" onchange="saveData()"><br><span class="p-name">Maghrib</span></div>
             <div><input type="checkbox" class="q-chk" onchange="saveData()"><br><span class="p-name">Isha</span></div>
         </div>
+        <p style="text-align: center; font-size: 0.7rem; margin-top: 10px; opacity: 0.7;" id="l-goal-hint">Target: 20 pages per day</p>
     </div>
 
     <div class="card">
@@ -84,28 +92,41 @@
     <script>
         const translations = {
             en: { 
-                title: "🌙 Erbil Ramadan 2026", dua: "Dua of the Moment", times: "Erbil Schedule", suhoor: "Suhoor Ends", iftar: "Iftar (Maghrib)", quran: "Quran Progress", page: "Current Page", fast: "Fasting Journal",
+                title: "Days Until Ramadan", countdownSub: "Starts: Feb 18, 2026", dua: "Dua of the Moment", times: "Erbil Schedule", suhoor: "Suhoor Ends", iftar: "Iftar (Maghrib)", quran: "Quran Progress", page: "Current Page", fast: "Fasting Journal", goal: "Target: 20 pages per day",
                 prayers: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"],
                 duaA: "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ",
                 duaT: "The thirst has gone, the veins are moistened, and reward is confirmed, if Allah wills."
             },
             ar: { 
-                title: "🌙 رمضان أربيل ٢٠٢٦", dua: "دعاء اللحظة", times: "مواقيت أربيل", suhoor: "نهاية السحور", iftar: "الإفطار (المغرب)", quran: "ختم القرآن", page: "الصفحة الحالية", fast: "سجل الصيام",
+                title: "الأيام المتبقية لرمضان", countdownSub: "يبدأ ١٨ فبراير ٢٠٢٦", dua: "دعاء اللحظة", times: "مواقيت أربيل", suhoor: "نهاية السحور", iftar: "الإفطار (المغرب)", quran: "ختم القرآن", page: "الصفحة الحالية", fast: "سجل الصيام", goal: "الهدف: ٢٠ صفحة يومياً",
                 prayers: ["الفجر", "الظهر", "العصر", "المغرب", "العشاء"],
                 duaA: "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ",
                 duaT: "ذهب الظمأ وابتلت العروق وثبت الأجر إن شاء الله"
             },
             ku: { 
-                title: "🌙 ڕەمەزانی هەولێر ٢٠٢٦", dua: "دوعای کات", times: "خشتەی هەولێر", suhoor: "کۆتایی پاششێو", iftar: "بەربانگ (مەغریب)", quran: "خاتمەی قورئان", page: "لاپەڕەی ئێستا", fast: "ڕۆژژمێری ڕۆژوو",
+                title: "ڕۆژەکانی ماوە بۆ ڕەمەزان", countdownSub: "١٨ی ٢ی ٢٠٢٦ دەستپێدەکات", dua: "دوعای کات", times: "خشتەی هەولێر", suhoor: "کۆتایی پاششێو", iftar: "بەربانگ (مەغریب)", quran: "خاتمەی قورئان", page: "لاپەڕەی ئێستا", fast: "ڕۆژژمێری ڕۆژوو", goal: "ئامانج: ٢٠ لاپەڕە لە ڕۆژێکدا",
                 prayers: ["بەیانی", "نیوەڕۆ", "عەسر", "شێوان", "خەوتنان"],
                 duaA: "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ",
                 duaT: "تێنوێتی شکا و دەمارەکان تەڕ بوون و پاداشت جێگیر بوو ئەگەر خودا بیەوێت."
             }
         };
 
+        function updateLiveCountdown() {
+            const now = new Date();
+            const start = new Date("February 18, 2026 00:00:00");
+            const end = new Date("March 20, 2026 00:00:00");
+            const lang = localStorage.getItem('ramadan_lang') || 'en';
+            
+            let target = (now < start) ? start : end;
+            const diff = target - now;
+            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('big-days-left').innerText = Math.max(0, days);
+            document.getElementById('countdown-label').innerText = (now < start) ? translations[lang].title : (lang === 'en' ? "Days Until Eid" : (lang === 'ar' ? "الأيام المتبقية للعيد" : "ڕۆژەکانی ماوە بۆ جەژن"));
+        }
+
         function setLang(lang) {
             const t = translations[lang];
-            document.getElementById('main-title').innerText = t.title;
             document.getElementById('h-dua').innerText = t.dua;
             document.getElementById('dua-arabic').innerText = t.duaA;
             document.getElementById('dua-translation').innerText = t.duaT;
@@ -115,6 +136,8 @@
             document.getElementById('h-quran').innerText = t.quran;
             document.getElementById('l-page').innerText = t.page;
             document.getElementById('h-fast').innerText = t.fast;
+            document.getElementById('l-goal-hint').innerText = t.goal;
+            document.getElementById('countdown-subtext').innerText = t.countdownSub;
             
             const pNames = document.querySelectorAll('.p-name');
             t.prayers.forEach((p, i) => pNames[i].innerText = p);
@@ -123,6 +146,7 @@
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
             localStorage.setItem('ramadan_lang', lang);
+            updateLiveCountdown();
         }
 
         let fastedDays = JSON.parse(localStorage.getItem('ramadan_fasts')) || [];
@@ -147,19 +171,21 @@
         function saveData() {
             const page = document.getElementById('curPage').value;
             const checks = Array.from(document.querySelectorAll('.q-chk')).map(c => c.checked);
-            localStorage.setItem('ramadan_v3_data', JSON.stringify({page, checks}));
+            localStorage.setItem('ramadan_v4_data', JSON.stringify({page, checks}));
             document.getElementById('qBar').style.width = Math.min((page / 604 * 100), 100) + "%";
         }
 
         window.onload = () => {
-            setLang(localStorage.getItem('ramadan_lang') || 'en');
-            const data = JSON.parse(localStorage.getItem('ramadan_v3_data'));
+            const savedLang = localStorage.getItem('ramadan_lang') || 'en';
+            setLang(savedLang);
+            const data = JSON.parse(localStorage.getItem('ramadan_v4_data'));
             if(data) {
                 document.getElementById('curPage').value = data.page;
                 document.querySelectorAll('.q-chk').forEach((c, i) => c.checked = data.checks[i]);
             }
             saveData();
             initGrid();
+            setInterval(updateLiveCountdown, 60000);
         };
     </script>
 </body>
