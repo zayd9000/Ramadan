@@ -16,27 +16,25 @@
         .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
 
         .lang-switcher { display: flex; gap: 5px; justify-content: flex-end; }
-        .lang-btn { background: #334155; border: none; color: white; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; transition: 0.3s; }
+        .lang-btn { background: #334155; border: none; color: white; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; }
         .lang-btn.active { background: var(--gold); color: black; font-weight: bold; }
 
-        .card { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid rgba(251, 191, 36, 0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid rgba(251, 191, 36, 0.2); }
         .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; color: var(--gold); display: flex; align-items: center; gap: 10px; }
         
         .timer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .clock { font-size: 2rem; font-weight: bold; font-family: monospace; letter-spacing: 1px; }
+        .clock { font-size: 2rem; font-weight: bold; font-family: monospace; }
         .badge { background: var(--gold); color: black; padding: 5px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; }
 
-        .progress-bg { background: #0f172a; height: 12px; border-radius: 6px; overflow: hidden; margin: 12px 0; border: 1px solid #334155; }
-        .progress-fill { background: linear-gradient(90deg, #f59e0b, #fbbf24); height: 100%; width: 0%; transition: 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .progress-bg { background: #0f172a; height: 12px; border-radius: 6px; overflow: hidden; margin: 12px 0; }
+        .progress-fill { background: linear-gradient(90deg, #f59e0b, #fbbf24); height: 100%; width: 0%; transition: 1s; }
 
         .prayer-auto-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .prayer-status { padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
+        .prayer-status { padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; font-size: 0.9rem; display: flex; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); }
         .status-done { color: #22c55e; font-weight: bold; }
-        .status-wait { color: var(--text-gray); font-family: monospace; }
 
         .dua-box { border-left: 3px solid var(--gold); padding-left: 15px; line-height: 1.6; }
         .rtl { direction: rtl; text-align: right; border-left: none; border-right: 3px solid var(--gold); padding-right: 15px; }
-        .dua-lang { display: block; margin-bottom: 10px; font-size: 0.95rem; color: #e2e8f0; }
     </style>
 </head>
 <body>
@@ -53,15 +51,15 @@
             <div id="date-label" style="color: var(--text-gray);">Sunday, Feb 8</div>
             <div id="live-clock" class="clock">00:00:00</div>
         </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <div id="iftar-timer" class="badge">⏳ Calculating...</div>
-            <div id="fasting-status" class="badge" style="background: #334155; color: white; border: 1px solid var(--gold);">--</div>
+        <div style="display: flex; gap: 10px;">
+            <div id="iftar-timer" class="badge" style="display:none;">⏳ Iftar Countdown</div>
+            <div id="fasting-status" class="badge">--</div>
         </div>
     </div>
 
     <div class="card">
-        <div class="card-title" id="t-quran">📖 Quran Progress</div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.95rem;">
+        <div class="card-title">📖 <span id="t-quran">Quran Progress</span></div>
+        <div style="display: flex; justify-content: space-between;">
             <span id="t-pages">Pages Read</span>
             <span><strong id="pages-count">0</strong> / 604</span>
         </div>
@@ -70,39 +68,39 @@
     </div>
 
     <div class="card">
-        <div class="card-title" id="t-worship">✅ Daily Worship (Auto)</div>
+        <div class="card-title">✅ <span id="t-worship">Daily Worship (Auto)</span></div>
         <div class="prayer-auto-list" id="prayer-list"></div>
     </div>
 
     <div class="card">
         <div class="card-title">✨ Daily Dua | دوعا</div>
         <div id="dua-container" class="dua-box">
-            <span class="dua-lang"><strong>EN:</strong> "O Allah, let us reach Ramadan in a state of peace and faith."</span>
-            <span class="dua-lang rtl"><strong>KU:</strong> "خوایە بمانگەیەنیتە ڕەمەزان بە سەلامەتی و ئیمانەوە."</span>
-            <span class="dua-lang rtl"><strong>AR:</strong> "اللهم بلغنا رمضان وأنت راضٍ عنا."</span>
+            <div style="margin-bottom:10px;"><strong>EN:</strong> "O Allah, let us reach Ramadan in peace."</div>
+            <div class="rtl" style="margin-bottom:10px;"><strong>KU:</strong> "خوایە بمانگەیەنیتە ڕەمەزان بە سەلامەتی."</div>
+            <div class="rtl"><strong>AR:</strong> "اللهم بلغنا رمضان وأنت راضٍ عنا."</div>
         </div>
     </div>
 </div>
 
 <script>
-    const ramadanStartDate = new Date("2026-02-18T00:00:00");
+    const ramadanStart = new Date("2026-02-18T00:00:00");
     let currentLang = 'en';
 
     const translations = {
-        en: { quran: "Quran Progress", pages: "Pages Read", worship: "Daily Worship (Auto)", done: "Done", pending: "Waiting", countdown: "Days until Ramadan", fasting: "Days Fasted", startSoon: "Tracking starts on Day 1" },
-        ku: { quran: "پێشکەوتنی قورئان", pages: "لاپەڕەکان", worship: "عیبادەت (خۆکار)", done: "تەواو", pending: "چاوەڕوان", countdown: "ڕۆژ بۆ ڕەمەزان", fasting: "ڕۆژی بەڕۆژوو بوون", startSoon: "لە ڕۆژی یەکەم دەستپێدەکات" },
-        ar: { quran: "ختم القرآن", pages: "الصفحات", worship: "العبادات (تلقائي)", done: "تم", pending: "انتظار", countdown: "يوم لرمضان", fasting: "أيام الصيام", startSoon: "يبدأ التتبع في اليوم الأول" }
+        en: { quran: "Quran Progress", pages: "Pages Read", worship: "Daily Worship (Auto)", done: "Done", countdown: "Days to Ramadan", fasting: "Days Fasted", startSoon: "Tracking starts on Day 1" },
+        ku: { quran: "پێشکەوتنی قورئان", pages: "لاپەڕەکان", worship: "عیبادەت (خۆکار)", done: "تەواو", countdown: "ڕۆژ بۆ ڕەمەزان", fasting: "ڕۆژی بەڕۆژوو", startSoon: "لە ڕۆژی ١ دەستپێدەکات" },
+        ar: { quran: "ختم القرآن", pages: "الصفحات", worship: "العبادات (تلقائي)", done: "تم", countdown: "يوم لرمضان", fasting: "أيام الصيام", startSoon: "يبدأ في اليوم الأول" }
     };
 
-    const prayerTimes = [
-        { id: 'fajr', name: { en: 'Fajr', ku: 'بەیانی', ar: 'الفجر' }, time: "05:22", pages: 4 },
-        { id: 'dhuhr', name: { en: 'Dhuhr', ku: 'نیوەڕۆ', ar: 'الظهر' }, time: "12:18", pages: 4 },
-        { id: 'asr', name: { en: 'Asr', ku: 'عەسر', ar: 'العصر' }, time: "15:14", pages: 4 },
-        { id: 'maghrib', name: { en: 'Maghrib', ku: 'ئێوارە', ar: 'المغرب' }, time: "17:48", pages: 4 },
-        { id: 'isha', name: { en: 'Isha', ku: 'خەوتنان', ar: 'العشاء' }, time: "19:04", pages: 4 }
+    const prayers = [
+        { id: 'fajr', name: { en: 'Fajr', ku: 'بەیانی', ar: 'الفجر' }, time: "05:22" },
+        { id: 'dhuhr', name: { en: 'Dhuhr', ku: 'نیوەڕۆ', ar: 'الظهر' }, time: "12:18" },
+        { id: 'asr', name: { en: 'Asr', ku: 'عەسر', ar: 'العصر' }, time: "15:14" },
+        { id: 'maghrib', name: { en: 'Maghrib', ku: 'ئێوارە', ar: 'المغرب' }, time: "17:48" },
+        { id: 'isha', name: { en: 'Isha', ku: 'خەوتنان', ar: 'العشاء' }, time: "19:04" }
     ];
 
-    function updateHub() {
+    function update() {
         const now = new Date();
         const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
         const shortTime = timeStr.substring(0, 5);
@@ -110,86 +108,63 @@
         document.getElementById('live-clock').innerText = timeStr;
         document.getElementById('date-label').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 
-        // Corrected Ramadan Countdown & Day Logic
-        const diffMs = ramadanStartDate - now;
+        const diffMs = ramadanStart - now;
         const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-        const fastingEl = document.getElementById('fasting-status');
         const isRamadan = diffMs <= 0;
 
-        let activeRamadanDay = 0;
-        if (isRamadan) {
-            activeRamadanDay = Math.floor(Math.abs(diffMs) / (1000 * 60 * 60 * 24)) + 1;
-            fastingEl.innerText = `${activeRamadanDay} ${translations[currentLang].fasting}`;
-            document.getElementById('quran-message').innerText = "";
-        } else {
-            fastingEl.innerText = `${diffDays} ${translations[currentLang].countdown}`;
-            document.getElementById('quran-message').innerText = translations[currentLang].startSoon;
-        }
-
-        // Fixed Iftar Timer Logic
-        const [cH, cM] = shortTime.split(':').map(Number);
-        const [iH, iM] = ["17", "48"];
-        let minsToIftar = (iH * 60 + iM) - (cH * 60 + cM);
+        // 1. Fasting Status
+        const statusEl = document.getElementById('fasting-status');
         const iftarEl = document.getElementById('iftar-timer');
         
-        // If it's already past Iftar, show a generic message or time to next day
-        if (minsToIftar > 0) {
-            const h = Math.floor(minsToIftar / 60);
-            const m = minsToIftar % 60;
-            iftarEl.innerText = `⏳ Iftar in ${h}h ${m}m`;
-        } else if (minsToIftar > -60) {
-            iftarEl.innerText = "🍽️ Iftar Time!";
+        if (!isRamadan) {
+            statusEl.innerText = `${diffDays} ${translations[currentLang].countdown}`;
+            iftarEl.style.display = "none";
+            document.getElementById('quran-message').innerText = translations[currentLang].startSoon;
         } else {
-            iftarEl.innerText = "🌙 Night Time";
+            const dayNum = Math.floor(Math.abs(diffMs) / (1000 * 60 * 60 * 24)) + 1;
+            statusEl.innerText = `${dayNum} ${translations[currentLang].fasting}`;
+            iftarEl.style.display = "block";
+            document.getElementById('quran-message').innerText = "";
+            
+            // Iftar Timer (Only shows during Ramadan)
+            const [cH, cM] = shortTime.split(':').map(Number);
+            const mins = (17 * 60 + 48) - (cH * 60 + cM);
+            iftarEl.innerText = mins > 0 ? `⏳ Iftar in ${Math.floor(mins/60)}h ${mins%60}m` : "🍽️ Iftar Time!";
         }
 
-        // Worship & Quran Logic (Locked until isRamadan is true)
-        let pagesReadToday = 0;
+        // 2. Worship & Quran (Only if isRamadan)
+        let pages = 0;
         const list = document.getElementById('prayer-list');
         list.innerHTML = '';
 
-        prayerTimes.forEach(p => {
-            const passed = shortTime >= p.time;
-            if (isRamadan && passed) pagesReadToday += p.pages;
+        prayers.forEach(p => {
+            const done = shortTime >= p.time;
+            if (isRamadan && done) pages += 4; // 4 pages per prayer
             
-            const item = document.createElement('div');
-            item.className = 'prayer-status';
-            item.innerHTML = `
+            list.innerHTML += `<div class="prayer-status">
                 <span>${p.name[currentLang]}</span>
-                <span class="${passed ? 'status-done' : 'status-wait'}">${passed ? translations[currentLang].done : p.time}</span>
-            `;
-            list.appendChild(item);
+                <span class="${done ? 'status-done' : ''}">${done ? translations[currentLang].done : p.time}</span>
+            </div>`;
         });
 
-        // Global Quran Progress starts from 0 on Day 1
-        let totalCompletedPages = isRamadan ? ((activeRamadanDay - 1) * 20) + pagesReadToday : 0;
-        
-        document.getElementById('pages-count').innerText = Math.min(totalCompletedPages, 604);
-        document.getElementById('q-bar').style.width = (Math.min(totalCompletedPages, 604) / 604 * 100) + '%';
+        const totalPages = isRamadan ? ((Math.floor(Math.abs(diffMs) / (1000 * 60 * 60 * 24))) * 20) + pages : 0;
+        document.getElementById('pages-count').innerText = Math.min(totalPages, 604);
+        document.getElementById('q-bar').style.width = (Math.min(totalPages, 604) / 604 * 100) + '%';
     }
 
     function setLang(lang) {
         currentLang = lang;
-        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-        // Correct way to find the button
-        const btns = document.querySelectorAll('.lang-btn');
-        if(lang === 'en') btns[0].classList.add('active');
-        if(lang === 'ku') btns[1].classList.add('active');
-        if(lang === 'ar') btns[2].classList.add('active');
-        
+        document.querySelectorAll('.lang-btn').forEach((b, i) => {
+            b.classList.toggle('active', (lang === 'en' && i === 0) || (lang === 'ku' && i === 1) || (lang === 'ar' && i === 2));
+        });
         document.getElementById('t-quran').innerText = translations[lang].quran;
         document.getElementById('t-pages').innerText = translations[lang].pages;
         document.getElementById('t-worship').innerText = translations[lang].worship;
-        
-        const container = document.getElementById('dua-container');
-        if (lang === 'en') container.classList.remove('rtl');
-        else container.classList.add('rtl');
-        
-        updateHub();
+        update();
     }
 
-    setInterval(updateHub, 1000);
-    updateHub();
+    setInterval(update, 1000);
+    update();
 </script>
 </body>
 </html>
