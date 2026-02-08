@@ -110,7 +110,7 @@
         document.getElementById('live-clock').innerText = timeStr;
         document.getElementById('date-label').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 
-        // Fasting & Countdown Logic
+        // Corrected Ramadan Countdown & Day Logic
         const diffMs = ramadanStartDate - now;
         const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
         const fastingEl = document.getElementById('fasting-status');
@@ -126,19 +126,24 @@
             document.getElementById('quran-message').innerText = translations[currentLang].startSoon;
         }
 
-        // Iftar Timer
+        // Fixed Iftar Timer Logic
         const [cH, cM] = shortTime.split(':').map(Number);
         const [iH, iM] = ["17", "48"];
-        const minsToIftar = (iH * 60 + iM) - (cH * 60 + cM);
+        let minsToIftar = (iH * 60 + iM) - (cH * 60 + cM);
         const iftarEl = document.getElementById('iftar-timer');
         
+        // If it's already past Iftar, show a generic message or time to next day
         if (minsToIftar > 0) {
-            iftarEl.innerText = `⏳ Iftar in ${Math.floor(minsToIftar/60)}h ${minsToIftar%60}m`;
-        } else {
+            const h = Math.floor(minsToIftar / 60);
+            const m = minsToIftar % 60;
+            iftarEl.innerText = `⏳ Iftar in ${h}h ${m}m`;
+        } else if (minsToIftar > -60) {
             iftarEl.innerText = "🍽️ Iftar Time!";
+        } else {
+            iftarEl.innerText = "🌙 Night Time";
         }
 
-        // Worship & Quran Logic (Only active if isRamadan is true)
+        // Worship & Quran Logic (Locked until isRamadan is true)
         let pagesReadToday = 0;
         const list = document.getElementById('prayer-list');
         list.innerHTML = '';
@@ -156,18 +161,21 @@
             list.appendChild(item);
         });
 
-        // Global Quran Progress (Assuming cumulative for the whole month)
-        // If it's Day 5, we add previous days (Day 1-4) + today's progress
+        // Global Quran Progress starts from 0 on Day 1
         let totalCompletedPages = isRamadan ? ((activeRamadanDay - 1) * 20) + pagesReadToday : 0;
         
-        document.getElementById('pages-count').innerText = totalCompletedPages;
-        document.getElementById('q-bar').style.width = (totalCompletedPages / 604 * 100) + '%';
+        document.getElementById('pages-count').innerText = Math.min(totalCompletedPages, 604);
+        document.getElementById('q-bar').style.width = (Math.min(totalCompletedPages, 604) / 604 * 100) + '%';
     }
 
     function setLang(lang) {
         currentLang = lang;
         document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        // Correct way to find the button
+        const btns = document.querySelectorAll('.lang-btn');
+        if(lang === 'en') btns[0].classList.add('active');
+        if(lang === 'ku') btns[1].classList.add('active');
+        if(lang === 'ar') btns[2].classList.add('active');
         
         document.getElementById('t-quran').innerText = translations[lang].quran;
         document.getElementById('t-pages').innerText = translations[lang].pages;
