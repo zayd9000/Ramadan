@@ -3,190 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Erbil Ramadan Companion 2026</title>
+    <title>Ramadan Companion - Erbil</title>
     <style>
-        :root { --gold: #D4AF37; --navy: #0A192F; --dark-card: #112240; --text: #E6F1FF; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--navy); color: var(--text); padding: 20px; display: flex; flex-direction: column; align-items: center; transition: all 0.3s; }
-        .card { background: var(--dark-card); padding: 20px; border-radius: 15px; width: 100%; max-width: 500px; margin-bottom: 20px; border-top: 4px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-        
-        /* Language Bar with Flags */
-        .lang-bar { margin-bottom: 25px; display: flex; gap: 10px; justify-content: center; }
-        .lang-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--gold); color: var(--gold); padding: 8px 14px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; }
-        .lang-btn.active { background: var(--gold); color: var(--navy); }
-        .flag-icon { width: 22px; height: 14px; border-radius: 2px; object-fit: cover; }
+        :root {
+            --ramadan-green: #065f46;
+            --ramadan-gold: #fbbf24;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+        }
 
-        .rtl { direction: rtl; text-align: right; }
-        .ltr { direction: ltr; text-align: left; }
-        
-        /* Countdown Header Styling */
-        .countdown-big { font-size: 3.5rem; font-weight: bold; color: var(--gold); line-height: 1; margin: 10px 0; }
-        
-        /* Grid & Inputs */
-        .fasting-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-        .day-box { aspect-ratio: 1; border: 1px solid #233554; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; }
-        .day-box.completed { background: var(--gold); color: var(--navy); font-weight: bold; }
-        
-        .progress-container { background: #233554; border-radius: 10px; height: 12px; margin: 15px 0; overflow: hidden; }
-        .progress-bar { background: var(--gold); height: 100%; width: 0%; transition: width 0.4s; }
-        
-        .check-group { display: flex; justify-content: space-between; text-align: center; font-size: 0.75rem; margin-top: 15px; }
-        input[type="number"] { background: transparent; border: 1px solid var(--gold); color: white; padding: 5px; border-radius: 5px; width: 60px; text-align: center; font-weight: bold; }
-        .dua-text { font-style: italic; border-left: 3px solid var(--gold); padding-left: 15px; margin-top: 10px; }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Header Card */
+        .header-card {
+            background: linear-gradient(135deg, var(--ramadan-green) 0%, #064e3b 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .live-clock {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 0;
+        }
+
+        .date-display {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .iftar-badge {
+            background: var(--ramadan-gold);
+            color: #000;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        /* Prayer Times Grid */
+        .prayer-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 25px;
+        }
+
+        .prayer-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 5px;
+            text-align: center;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+        }
+
+        .prayer-item strong {
+            display: block;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .prayer-item.active {
+            background: var(--ramadan-gold);
+            color: #000;
+            border-color: var(--ramadan-gold);
+            transform: scale(1.05);
+        }
+
+        /* Progress Card */
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-title {
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+            color: var(--ramadan-green);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quran-input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-container {
+            background: #e2e8f0;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: #10b981;
+            height: 100%;
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Checklist */
+        .checklist {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .check-item:hover {
+            background: #f1f5f9;
+        }
+
+        .check-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--ramadan-green);
+        }
+
+        .btn-reset {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #f1f5f9;
+            color: #64748b;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-reset:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
     </style>
 </head>
 <body>
 
-    <div class="lang-bar">
-        <button class="lang-btn active" id="btn-en" onclick="setLang('en')"><img src="https://flagcdn.com/w40/us.png" class="flag-icon"> EN</button>
-        <button class="lang-btn" id="btn-ar" onclick="setLang('ar')"><img src="https://flagcdn.com/w40/iq.png" class="flag-icon"> عربي</button>
-        <button class="lang-btn" id="btn-ku" onclick="setLang('ku')"><img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Flag_of_Kurdistan.svg" class="flag-icon"> کوردی</button>
-    </div>
-
-    <div class="card" style="text-align: center; background: linear-gradient(145deg, #112240, #1a3055);">
-        <h2 id="countdown-label" style="font-size: 1rem; margin-bottom: 0;">Days Until Ramadan</h2>
-        <div id="big-days-left" class="countdown-big">10</div>
-        <p id="countdown-subtext" style="font-size: 0.8rem; opacity: 0.8;">Starts: Feb 18, 2026</p>
-    </div>
-
-    <div class="card">
-        <h2 id="h-dua">Dua of the Moment</h2>
-        <div class="dua-text">
-            <span id="dua-arabic" style="display:block; font-size: 1.2rem; margin-bottom: 5px; font-style: normal;"></span>
-            <span id="dua-translation"></span>
+<div class="container">
+    <div class="header-card">
+        <div class="header-top">
+            <div>
+                <h3 style="margin:0; opacity: 0.9; font-weight: 400;">Ramadan 2026</h3>
+                <div id="live-date" class="date-display">Loading date...</div>
+            </div>
+            <div style="text-align: right;">
+                <div id="live-clock" class="live-clock">00:00:00</div>
+                <div id="iftar-timer" class="iftar-badge">Calculating Iftar...</div>
+            </div>
         </div>
-    </div>
-
-    <div class="card">
-        <h2 id="h-times">Erbil Schedule</h2>
-        <div style="display: flex; justify-content: space-around; text-align: center;">
-            <div><small id="l-suhoor">Suhoor Ends</small><br><strong style="font-size: 1.3rem; color: var(--gold);">05:22 AM</strong></div>
-            <div style="border-left: 1px solid #233554;"></div>
-            <div><small id="l-iftar">Iftar (Maghrib)</small><br><strong style="font-size: 1.3rem; color: var(--gold);">05:48 PM</strong></div>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2 id="h-quran">Quran Progress</h2>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span id="l-page">Current Page</span>
-            <input type="number" id="curPage" value="0" oninput="saveData()">
-        </div>
-        <div class="progress-container"><div id="qBar" class="progress-bar"></div></div>
         
-        <div class="check-group">
-            <div><input type="checkbox" class="q-chk" onchange="saveData()"><br><span class="p-name">Fajr</span></div>
-            <div><input type="checkbox" class="q-chk" onchange="saveData()"><br><span class="p-name">Dhuhr</span></div>
-            <div><input type="checkbox" class="q-chk" onchange="saveData()"><br><span class="p-name">Asr</span></div>
-            <div><input type="checkbox" class="q-chk" onchange="saveData()"><br><span class="p-name">Maghrib</span></div>
-            <div><input type="checkbox" class="q-chk" onchange="saveData()"><br><span class="p-name">Isha</span></div>
+        <div class="prayer-grid">
+            <div class="prayer-item" id="fajr">Fajr<strong>05:22</strong></div>
+            <div class="prayer-item" id="dhuhr">Dhuhr<strong>12:18</strong></div>
+            <div class="prayer-item" id="asr">Asr<strong>15:14</strong></div>
+            <div class="prayer-item" id="maghrib">Iftar<strong>17:37</strong></div>
+            <div class="prayer-item" id="isha">Isha<strong>19:04</strong></div>
         </div>
-        <p style="text-align: center; font-size: 0.7rem; margin-top: 10px; opacity: 0.7;" id="l-goal-hint">Target: 20 pages per day</p>
     </div>
 
     <div class="card">
-        <h2 id="h-fast">Fasting Journal</h2>
-        <div class="fasting-grid" id="fastingGrid"></div>
-        <p style="text-align: right; font-size: 0.9rem; margin-top: 10px; color: var(--gold);" id="fastingStat">0/30</p>
+        <div class="card-title">📖 Quran Progress</div>
+        <div class="quran-input-group">
+            <span>Juz Completed</span>
+            <span>
+                <input type="number" id="q-juz" value="0" min="0" max="30" 
+                       style="width: 50px; padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; font-weight: bold;" 
+                       oninput="saveData()"> / 30
+            </span>
+        </div>
+        <div class="progress-container">
+            <div id="q-bar" class="progress-bar"></div>
+        </div>
+        <div id="q-percent" style="text-align: right; font-size: 0.8rem; margin-top: 5px; color: #64748b;">0%</div>
     </div>
 
-    <script>
-        const translations = {
-            en: { 
-                title: "Days Until Ramadan", countdownSub: "Starts: Feb 18, 2026", dua: "Dua of the Moment", times: "Erbil Schedule", suhoor: "Suhoor Ends", iftar: "Iftar (Maghrib)", quran: "Quran Progress", page: "Current Page", fast: "Fasting Journal", goal: "Target: 20 pages per day",
-                prayers: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"],
-                duaA: "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ",
-                duaT: "The thirst has gone, the veins are moistened, and reward is confirmed, if Allah wills."
-            },
-            ar: { 
-                title: "الأيام المتبقية لرمضان", countdownSub: "يبدأ ١٨ فبراير ٢٠٢٦", dua: "دعاء اللحظة", times: "مواقيت أربيل", suhoor: "نهاية السحور", iftar: "الإفطار (المغرب)", quran: "ختم القرآن", page: "الصفحة الحالية", fast: "سجل الصيام", goal: "الهدف: ٢٠ صفحة يومياً",
-                prayers: ["الفجر", "الظهر", "العصر", "المغرب", "العشاء"],
-                duaA: "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ",
-                duaT: "ذهب الظمأ وابتلت العروق وثبت الأجر إن شاء الله"
-            },
-            ku: { 
-                title: "ڕۆژەکانی ماوە بۆ ڕەمەزان", countdownSub: "١٨ی ٢ی ٢٠٢٦ دەستپێدەکات", dua: "دوعای کات", times: "خشتەی هەولێر", suhoor: "کۆتایی پاششێو", iftar: "بەربانگ (مەغریب)", quran: "خاتمەی قورئان", page: "لاپەڕەی ئێستا", fast: "ڕۆژژمێری ڕۆژوو", goal: "ئامانج: ٢٠ لاپەڕە لە ڕۆژێکدا",
-                prayers: ["بەیانی", "نیوەڕۆ", "عەسر", "شێوان", "خەوتنان"],
-                duaA: "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ",
-                duaT: "تێنوێتی شکا و دەمارەکان تەڕ بوون و پاداشت جێگیر بوو ئەگەر خودا بیەوێت."
-            }
-        };
+    <div class="card">
+        <div class="card-title">✅ Daily Worship</div>
+        <div class="checklist">
+            <label class="check-item"><input type="checkbox" class="pray-cb" onchange="saveData()"> Fajr</label>
+            <label class="check-item"><input type="checkbox" class="pray-cb" onchange="saveData()"> Dhuhr</label>
+            <label class="check-item"><input type="checkbox" class="pray-cb" onchange="saveData()"> Asr</label>
+            <label class="check-item"><input type="checkbox" class="pray-cb" onchange="saveData()"> Maghrib</label>
+            <label class="check-item"><input type="checkbox" class="pray-cb" onchange="saveData()"> Isha</label>
+            <label class="check-item"><input type="checkbox" class="pray-cb" onchange="saveData()"> Taraweeh</label>
+        </div>
+        <button class="btn-reset" onclick="resetChecklist()">Reset for Tomorrow</button>
+    </div>
+</div>
 
-        function updateLiveCountdown() {
-            const now = new Date();
-            const start = new Date("February 18, 2026 00:00:00");
-            const end = new Date("March 20, 2026 00:00:00");
-            const lang = localStorage.getItem('ramadan_lang') || 'en';
-            
-            let target = (now < start) ? start : end;
-            const diff = target - now;
-            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-            
-            document.getElementById('big-days-left').innerText = Math.max(0, days);
-            document.getElementById('countdown-label').innerText = (now < start) ? translations[lang].title : (lang === 'en' ? "Days Until Eid" : (lang === 'ar' ? "الأيام المتبقية للعيد" : "ڕۆژەکانی ماوە بۆ جەژن"));
+<script>
+    // Erbil Prayer Times (Feb/March 2026 Approx)
+    const times = {
+        fajr: "05:22",
+        dhuhr: "12:18",
+        asr: "15:14",
+        maghrib: "17:37",
+        isha: "19:04"
+    };
+
+    function updateClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
+        const currentTime = timeStr.substring(0, 5);
+        
+        document.getElementById('live-clock').innerText = timeStr;
+        document.getElementById('live-date').innerText = now.toLocaleDateString('en-US', { 
+            weekday: 'long', month: 'short', day: 'numeric' 
+        });
+
+        // 1. Iftar Countdown Logic
+        const [cH, cM] = currentTime.split(':').map(Number);
+        const [iH, iM] = times.maghrib.split(':').map(Number);
+        
+        const currentTotal = (cH * 60) + cM;
+        const iftarTotal = (iH * 60) + iM;
+        const diff = iftarTotal - currentTotal;
+
+        const timerEl = document.getElementById('iftar-timer');
+        if (diff > 0) {
+            const h = Math.floor(diff / 60);
+            const m = diff % 60;
+            timerEl.innerText = `⏳ Iftar in ${h}h ${m}m`;
+            timerEl.style.background = "#fbbf24";
+        } else if (diff > -60) {
+            timerEl.innerText = "🍽️ Iftar Time! Enjoy!";
+            timerEl.style.background = "#22c55e";
+            timerEl.style.color = "#fff";
+        } else {
+            timerEl.innerText = "🌙 Fasting starts at Fajr";
+            timerEl.style.background = "#64748b";
+            timerEl.style.color = "#fff";
         }
 
-        function setLang(lang) {
-            const t = translations[lang];
-            document.getElementById('h-dua').innerText = t.dua;
-            document.getElementById('dua-arabic').innerText = t.duaA;
-            document.getElementById('dua-translation').innerText = t.duaT;
-            document.getElementById('h-times').innerText = t.times;
-            document.getElementById('l-suhoor').innerText = t.suhoor;
-            document.getElementById('l-iftar').innerText = t.iftar;
-            document.getElementById('h-quran').innerText = t.quran;
-            document.getElementById('l-page').innerText = t.page;
-            document.getElementById('h-fast').innerText = t.fast;
-            document.getElementById('l-goal-hint').innerText = t.goal;
-            document.getElementById('countdown-subtext').innerText = t.countdownSub;
-            
-            const pNames = document.querySelectorAll('.p-name');
-            t.prayers.forEach((p, i) => pNames[i].innerText = p);
+        // 2. Active Prayer Highlighting
+        document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('active'));
+        if (currentTime < times.fajr) document.getElementById('fajr').classList.add('active');
+        else if (currentTime < times.dhuhr) document.getElementById('dhuhr').classList.add('active');
+        else if (currentTime < times.asr) document.getElementById('asr').classList.add('active');
+        else if (currentTime < times.maghrib) document.getElementById('maghrib').classList.add('active');
+        else if (currentTime < times.isha) document.getElementById('isha').classList.add('active');
+        else document.getElementById('fajr').classList.add('active');
+    }
 
-            document.body.className = (lang === 'en' ? 'ltr' : 'rtl');
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + lang).classList.add('active');
-            localStorage.setItem('ramadan_lang', lang);
-            updateLiveCountdown();
-        }
+    // Save and Sync Data to LocalStorage
+    function saveData() {
+        const juzValue = document.getElementById('q-juz').value || 0;
+        const progressPercent = Math.min((juzValue / 30) * 100, 100);
+        
+        document.getElementById('q-bar').style.width = progressPercent + '%';
+        document.getElementById('q-percent').innerText = Math.round(progressPercent) + '%';
+        
+        localStorage.setItem('ramadan_juz_2026', juzValue);
 
-        let fastedDays = JSON.parse(localStorage.getItem('ramadan_fasts')) || [];
-        function initGrid() {
-            const grid = document.getElementById('fastingGrid');
-            grid.innerHTML = '';
-            for (let i = 1; i <= 30; i++) {
-                const div = document.createElement('div');
-                div.className = `day-box ${fastedDays.includes(i) ? 'completed' : ''}`;
-                div.innerText = i;
-                div.onclick = () => {
-                    if(fastedDays.includes(i)) fastedDays = fastedDays.filter(d => d !== i);
-                    else fastedDays.push(i);
-                    localStorage.setItem('ramadan_fasts', JSON.stringify(fastedDays));
-                    initGrid();
-                };
-                grid.appendChild(div);
-            }
-            document.getElementById('fastingStat').innerText = `${fastedDays.length}/30`;
-        }
+        const checklist = Array.from(document.querySelectorAll('.pray-cb')).map(cb => cb.checked);
+        localStorage.setItem('ramadan_prayers_2026', JSON.stringify(checklist));
+    }
 
-        function saveData() {
-            const page = document.getElementById('curPage').value;
-            const checks = Array.from(document.querySelectorAll('.q-chk')).map(c => c.checked);
-            localStorage.setItem('ramadan_v4_data', JSON.stringify({page, checks}));
-            document.getElementById('qBar').style.width = Math.min((page / 604 * 100), 100) + "%";
-        }
-
-        window.onload = () => {
-            const savedLang = localStorage.getItem('ramadan_lang') || 'en';
-            setLang(savedLang);
-            const data = JSON.parse(localStorage.getItem('ramadan_v4_data'));
-            if(data) {
-                document.getElementById('curPage').value = data.page;
-                document.querySelectorAll('.q-chk').forEach((c, i) => c.checked = data.checks[i]);
-            }
+    function resetChecklist() {
+        if(confirm("Clear daily checklist for the new day?")) {
+            document.querySelectorAll('.pray-cb').forEach(cb => cb.checked = false);
             saveData();
-            initGrid();
-            setInterval(updateLiveCountdown, 60000);
-        };
-    </script>
+        }
+    }
+
+    // Initialization
+    window.onload = () => {
+        // Load Quran Progress
+        const savedJuz = localStorage.getItem('ramadan_juz_2026') || 0;
+        document.getElementById('q-juz').value = savedJuz;
+
+        // Load Prayer Checklist
+        const savedChecklist = JSON.parse(localStorage.getItem('ramadan_prayers_2026') || '[]');
+        document.querySelectorAll('.pray-cb').forEach((cb, i) => {
+            cb.checked = savedChecklist[i] || false;
+        });
+
+        saveData(); // Sync UI with loaded data
+        setInterval(updateClock, 1000);
+        updateClock();
+    };
+</script>
+
 </body>
 </html>
