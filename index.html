@@ -15,81 +15,83 @@
         body { font-family: 'Segoe UI', sans-serif; background: var(--navy); color: white; margin: 0; padding: 15px; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
 
-        .lang-switcher { display: flex; gap: 5px; justify-content: flex-end; margin-bottom: 5px; }
-        .lang-btn { background: #334155; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; }
-        .lang-btn.active { background: var(--gold); color: black; }
+        .lang-switcher { display: flex; gap: 5px; justify-content: flex-end; }
+        .lang-btn { background: #334155; border: none; color: white; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; transition: 0.3s; }
+        .lang-btn.active { background: var(--gold); color: black; font-weight: bold; }
 
-        .card { background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid rgba(251, 191, 36, 0.2); }
-        .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; color: var(--gold); }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid rgba(251, 191, 36, 0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+        .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; color: var(--gold); display: flex; align-items: center; gap: 10px; }
         
         .timer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .clock { font-size: 1.8rem; font-weight: bold; font-family: monospace; }
-        .badge { background: var(--gold); color: black; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; }
+        .clock { font-size: 2rem; font-weight: bold; font-family: monospace; letter-spacing: 1px; }
+        .badge { background: var(--gold); color: black; padding: 5px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; }
 
-        .progress-bg { background: #334155; height: 10px; border-radius: 5px; overflow: hidden; margin: 10px 0; }
-        .progress-fill { background: var(--gold); height: 100%; width: 0%; transition: 0.8s ease; }
+        .progress-bg { background: #0f172a; height: 12px; border-radius: 6px; overflow: hidden; margin: 12px 0; border: 1px solid #334155; }
+        .progress-fill { background: linear-gradient(90deg, #f59e0b, #fbbf24); height: 100%; width: 0%; transition: 1s cubic-bezier(0.4, 0, 0.2, 1); }
 
         .prayer-auto-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .prayer-status { padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9rem; display: flex; justify-content: space-between; }
+        .prayer-status { padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
         .status-done { color: #22c55e; font-weight: bold; }
-        .status-wait { color: var(--text-gray); }
+        .status-wait { color: var(--text-gray); font-family: monospace; }
 
-        .dua-box { border-left: 3px solid var(--gold); padding-left: 12px; line-height: 1.4; }
-        .dua-lang { display: block; margin-bottom: 8px; font-size: 0.9rem; }
-        .rtl { direction: rtl; text-align: right; border-left: none; border-right: 3px solid var(--gold); padding-left: 0; padding-right: 12px; }
+        .dua-box { border-left: 3px solid var(--gold); padding-left: 15px; line-height: 1.6; }
+        .rtl { direction: rtl; text-align: right; border-left: none; border-right: 3px solid var(--gold); padding-right: 15px; }
+        .dua-lang { display: block; margin-bottom: 10px; font-size: 0.95rem; color: #e2e8f0; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="lang-switcher">
-        <button class="lang-btn active" onclick="setLang('en')">ENG</button>
-        <button class="lang-btn" onclick="setLang('ku')">KUR</button>
-        <button class="lang-btn" onclick="setLang('ar')">ARA</button>
+        <button class="lang-btn active" onclick="setLang('en')">English</button>
+        <button class="lang-btn" onclick="setLang('ku')">Kurdish</button>
+        <button class="lang-btn" onclick="setLang('ar')">Arabic</button>
     </div>
 
     <div class="card">
         <div class="timer-row">
-            <div id="date-label">Sunday, Feb 8</div>
+            <div id="date-label" style="color: var(--text-gray);">Sunday, Feb 8</div>
             <div id="live-clock" class="clock">00:00:00</div>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <div id="iftar-timer" class="badge">--:--</div>
-            <div id="day-counter" class="badge" style="background: rgba(255,255,255,0.1); color: white;">10 Days Left</div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <div id="iftar-timer" class="badge">⏳ Calculating...</div>
+            <div id="fasting-status" class="badge" style="background: #334155; color: white; border: 1px solid var(--gold);">--</div>
         </div>
     </div>
 
     <div class="card">
-        <div class="card-title" id="t-quran">Quran Progress</div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+        <div class="card-title" id="t-quran">📖 Quran Progress</div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.95rem;">
             <span id="t-pages">Pages Read</span>
             <span><strong id="pages-count">0</strong> / 604</span>
         </div>
         <div class="progress-bg"><div id="q-bar" class="progress-fill"></div></div>
-        <p style="font-size: 0.75rem; color: var(--text-gray);" id="t-quran-note">*Progress updates based on completed prayers.</p>
+        <p id="quran-message" style="font-size: 0.75rem; color: var(--gold); margin: 0;"></p>
     </div>
 
     <div class="card">
-        <div class="card-title" id="t-worship">Daily Worship (Auto)</div>
-        <div class="prayer-auto-list" id="prayer-list">
-            </div>
+        <div class="card-title" id="t-worship">✅ Daily Worship (Auto)</div>
+        <div class="prayer-auto-list" id="prayer-list"></div>
     </div>
 
     <div class="card">
-        <div class="card-title">✨ Daily Dua</div>
-        <div class="dua-box">
-            <span class="dua-lang"><strong>EN:</strong> "O Allah, let us reach Ramadan in peace."</span>
-            <span class="dua-lang rtl"><strong>KU:</strong> "خوایە بمانگەیەنیتە ڕەمەزان بە سەلامەتی."</span>
-            <span class="dua-lang rtl"><strong>AR:</strong> "اللهم بلغنا رمضان في أحسن حال."</span>
+        <div class="card-title">✨ Daily Dua | دوعا</div>
+        <div id="dua-container" class="dua-box">
+            <span class="dua-lang"><strong>EN:</strong> "O Allah, let us reach Ramadan in a state of peace and faith."</span>
+            <span class="dua-lang rtl"><strong>KU:</strong> "خوایە بمانگەیەنیتە ڕەمەزان بە سەلامەتی و ئیمانەوە."</span>
+            <span class="dua-lang rtl"><strong>AR:</strong> "اللهم بلغنا رمضان وأنت راضٍ عنا."</span>
         </div>
     </div>
 </div>
 
 <script>
+    const ramadanStartDate = new Date("2026-02-18T00:00:00");
+    let currentLang = 'en';
+
     const translations = {
-        en: { quran: "Quran Progress", pages: "Pages Read", worship: "Daily Worship (Auto)", note: "*Linked to prayers", done: "Done", wait: "Pending" },
-        ku: { quran: "بەرەوپێشچوونی قورئان", pages: "لاپەڕە خوێندراوەکان", worship: "عیبادەتی ڕۆژانە", note: "*بەپێی نوێژەکان", done: "تەواو", wait: "چاوەڕوان" },
-        ar: { quran: "تطور القرآن", pages: "الصفحات المقروءة", worship: "العبادات اليومية", note: "*مرتبط بالصلوات", done: "تم", wait: "قيد الانتظار" }
+        en: { quran: "Quran Progress", pages: "Pages Read", worship: "Daily Worship (Auto)", done: "Done", pending: "Waiting", countdown: "Days until Ramadan", fasting: "Days Fasted", startSoon: "Tracking starts on Day 1" },
+        ku: { quran: "پێشکەوتنی قورئان", pages: "لاپەڕەکان", worship: "عیبادەت (خۆکار)", done: "تەواو", pending: "چاوەڕوان", countdown: "ڕۆژ بۆ ڕەمەزان", fasting: "ڕۆژی بەڕۆژوو بوون", startSoon: "لە ڕۆژی یەکەم دەستپێدەکات" },
+        ar: { quran: "ختم القرآن", pages: "الصفحات", worship: "العبادات (تلقائي)", done: "تم", pending: "انتظار", countdown: "يوم لرمضان", fasting: "أيام الصيام", startSoon: "يبدأ التتبع في اليوم الأول" }
     };
 
     const prayerTimes = [
@@ -100,41 +102,66 @@
         { id: 'isha', name: { en: 'Isha', ku: 'خەوتنان', ar: 'العشاء' }, time: "19:04", pages: 4 }
     ];
 
-    let currentLang = 'en';
-
-    function updateApp() {
+    function updateHub() {
         const now = new Date();
         const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
         const shortTime = timeStr.substring(0, 5);
         
         document.getElementById('live-clock').innerText = timeStr;
-        
-        // Ramadan Countdown
-        const start = new Date("2026-02-18T00:00:00");
-        const diff = Math.ceil((start - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('day-counter').innerText = diff > 0 ? `${diff} Days Left` : `Day ${Math.abs(diff)+1} of Fasting`;
+        document.getElementById('date-label').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 
-        // Render Prayers & Calculate Quran
-        let totalPages = 0;
+        // Fasting & Countdown Logic
+        const diffMs = ramadanStartDate - now;
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        const fastingEl = document.getElementById('fasting-status');
+        const isRamadan = diffMs <= 0;
+
+        let activeRamadanDay = 0;
+        if (isRamadan) {
+            activeRamadanDay = Math.floor(Math.abs(diffMs) / (1000 * 60 * 60 * 24)) + 1;
+            fastingEl.innerText = `${activeRamadanDay} ${translations[currentLang].fasting}`;
+            document.getElementById('quran-message').innerText = "";
+        } else {
+            fastingEl.innerText = `${diffDays} ${translations[currentLang].countdown}`;
+            document.getElementById('quran-message').innerText = translations[currentLang].startSoon;
+        }
+
+        // Iftar Timer
+        const [cH, cM] = shortTime.split(':').map(Number);
+        const [iH, iM] = ["17", "48"];
+        const minsToIftar = (iH * 60 + iM) - (cH * 60 + cM);
+        const iftarEl = document.getElementById('iftar-timer');
+        
+        if (minsToIftar > 0) {
+            iftarEl.innerText = `⏳ Iftar in ${Math.floor(minsToIftar/60)}h ${minsToIftar%60}m`;
+        } else {
+            iftarEl.innerText = "🍽️ Iftar Time!";
+        }
+
+        // Worship & Quran Logic (Only active if isRamadan is true)
+        let pagesReadToday = 0;
         const list = document.getElementById('prayer-list');
         list.innerHTML = '';
 
         prayerTimes.forEach(p => {
-            const isDone = shortTime >= p.time;
-            if (isDone) totalPages += p.pages;
+            const passed = shortTime >= p.time;
+            if (isRamadan && passed) pagesReadToday += p.pages;
             
             const item = document.createElement('div');
             item.className = 'prayer-status';
             item.innerHTML = `
                 <span>${p.name[currentLang]}</span>
-                <span class="${isDone ? 'status-done' : 'status-wait'}">${isDone ? translations[currentLang].done : p.time}</span>
+                <span class="${passed ? 'status-done' : 'status-wait'}">${passed ? translations[currentLang].done : p.time}</span>
             `;
             list.appendChild(item);
         });
 
-        // Update Progress Bar
-        document.getElementById('pages-count').innerText = totalPages;
-        document.getElementById('q-bar').style.width = (totalPages / 604 * 100) + '%';
+        // Global Quran Progress (Assuming cumulative for the whole month)
+        // If it's Day 5, we add previous days (Day 1-4) + today's progress
+        let totalCompletedPages = isRamadan ? ((activeRamadanDay - 1) * 20) + pagesReadToday : 0;
+        
+        document.getElementById('pages-count').innerText = totalCompletedPages;
+        document.getElementById('q-bar').style.width = (totalCompletedPages / 604 * 100) + '%';
     }
 
     function setLang(lang) {
@@ -145,12 +172,16 @@
         document.getElementById('t-quran').innerText = translations[lang].quran;
         document.getElementById('t-pages').innerText = translations[lang].pages;
         document.getElementById('t-worship').innerText = translations[lang].worship;
-        document.getElementById('t-quran-note').innerText = translations[lang].note;
-        updateApp();
+        
+        const container = document.getElementById('dua-container');
+        if (lang === 'en') container.classList.remove('rtl');
+        else container.classList.add('rtl');
+        
+        updateHub();
     }
 
-    setInterval(updateApp, 1000);
-    updateApp();
+    setInterval(updateHub, 1000);
+    updateHub();
 </script>
 </body>
 </html>
