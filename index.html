@@ -35,6 +35,7 @@
 
         .dua-box { border-left: 3px solid var(--gold); padding-left: 15px; line-height: 1.6; }
         .rtl { direction: rtl; text-align: right; border-left: none; border-right: 3px solid var(--gold); padding-right: 15px; }
+        .dynamic-meta { font-size: 0.7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -73,11 +74,10 @@
     </div>
 
     <div class="card">
-        <div class="card-title">✨ Daily Dua | دوعا</div>
+        <div class="card-title">✨ <span id="dynamic-title">Daily Wisdom</span></div>
         <div id="dua-container" class="dua-box">
-            <div style="margin-bottom:10px;"><strong>EN:</strong> "O Allah, let us reach Ramadan in peace."</div>
-            <div class="rtl" style="margin-bottom:10px;"><strong>KU:</strong> "خوایە بمانگەیەنیتە ڕەمەزان بە سەلامەتی."</div>
-            <div class="rtl"><strong>AR:</strong> "اللهم بلغنا رمضان وأنت راضٍ عنا."</div>
+            <div id="display-quran" style="margin-bottom:12px; font-weight: 500; color: #fff;"></div>
+            <div id="display-quote" style="font-style: italic; color: var(--text-gray); font-size: 0.95rem;"></div>
         </div>
     </div>
 </div>
@@ -87,10 +87,30 @@
     let currentLang = 'en';
 
     const translations = {
-        en: { quran: "Quran Progress", pages: "Pages Read", worship: "Daily Worship (Auto)", done: "Done", countdown: "Days to Ramadan", fasting: "Day of Fasting", startSoon: "Tracking starts on Day 1" },
-        ku: { quran: "پێشکەوتنی قورئان", pages: "لاپەڕەکان", worship: "عیبادەت (خۆکار)", done: "تەواو", countdown: "ڕۆژ بۆ ڕەمەزان", fasting: "ڕۆژی بەڕۆژوو", startSoon: "لە ڕۆژی ١ دەستپێدەکات" },
-        ar: { quran: "ختم القرآن", pages: "الصفحات", worship: "العبادات (تلقائي)", done: "تم", countdown: "يوم لرمضان", fasting: "أيام الصيام", startSoon: "يبدأ في اليوم الأول" }
+        en: { quran: "Quran Progress", pages: "Pages Read", worship: "Daily Worship (Auto)", done: "Done", countdown: "Days to Ramadan", fasting: "Day of Fasting", startSoon: "Tracking starts on Day 1", wisdom: "Daily Wisdom" },
+        ku: { quran: "پێشکەوتنی قورئان", pages: "لاپەڕەکان", worship: "عیبادەت (خۆکار)", done: "تەواو", countdown: "ڕۆژ بۆ ڕەمەزان", fasting: "ڕۆژی بەڕۆژوو", startSoon: "لە ڕۆژی ١ دەستپێدەکات", wisdom: "وتەی ڕۆژ" },
+        ar: { quran: "ختم القرآن", pages: "الصفحات", worship: "العبادات (تلقائي)", done: "تم", countdown: "يوم لرمضان", fasting: "أيام الصيام", startSoon: "يبدأ في اليوم الأول", wisdom: "حكمة اليوم" }
     };
+
+    // 6-Hour Rotation Content (Changes at 12AM, 6AM, 12PM, 6PM)
+    const dailyWisdom = [
+        { 
+            q: { en: "Indeed, with hardship comes ease. (94:6)", ku: "بەڕاستی لەگەڵ هەر تەنگانەیەکدا خۆشییەک هەیە.", ar: "فإن مع العسر يسراً" },
+            m: { en: "Your strength is growing with every hour of patience.", ku: "هێزت زیاد دەکات لەگەڵ هەموو کاتژمێرێکی ئارامگرتن.", ar: "قوتك تزداد مع كل ساعة صبر." }
+        },
+        { 
+            q: { en: "And seek help through patience and prayer. (2:45)", ku: "داوای یارمەتی بکەن بە ئارامگرتن و نوێژکردن.", ar: "واستعينوا بالصبر والصلاة" },
+            m: { en: "A quiet heart is the best companion for a fasting soul.", ku: "دڵێکی ئارام باشترین هاوەڵە بۆ ڕۆژووەوان.", ar: "القلب الهادئ هو أفضل رفيق للصائم." }
+        },
+        { 
+            q: { en: "He is with you wherever you are. (57:4)", ku: "خودا لەگەڵتانە لە هەر شوێنێک بن.", ar: "وهو معكم أينما كنتم" },
+            m: { en: "You are never alone in your hunger or your prayers.", ku: "تۆ هەرگیز تەنها نیت لە برسییەتی و دوعاکانتدا.", ar: "لست وحدك أبداً في جوعك وصلاتك." }
+        },
+        { 
+            q: { en: "So remember Me; I will remember you. (2:152)", ku: "یادم بکەن، یادتان دەکەم.", ar: "فاذكروني أذكركم" },
+            m: { en: "The night is for reflection and the day for discipline.", ku: "شەو بۆ تێڕامانە و ڕۆژ بۆ خۆڕاگری.", ar: "الليل للتفكر والنهار للانضباط." }
+        }
+    ];
 
     const prayers = [
         { id: 'fajr', name: { en: 'Fajr', ku: 'بەیانی', ar: 'الفجر' }, time: "05:22 AM", military: "05:22" },
@@ -112,6 +132,24 @@
         const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
         const isRamadan = diffMs <= 0;
 
+        // Dynamic Content Rotation (Every 6 hours)
+        const hour = now.getHours();
+        const rotationIndex = Math.floor(hour / 6); // 0, 1, 2, or 3
+        const content = dailyWisdom[rotationIndex];
+        
+        const qElem = document.getElementById('display-quran');
+        const mElem = document.getElementById('display-quote');
+        
+        qElem.innerText = content.q[currentLang];
+        mElem.innerText = content.m[currentLang];
+        
+        // Handle RTL for Arabic/Kurdish
+        if(currentLang === 'en') {
+            qElem.parentElement.classList.remove('rtl');
+        } else {
+            qElem.parentElement.classList.add('rtl');
+        }
+
         const countBadge = document.getElementById('countdown-badge');
         const iftarBadge = document.getElementById('iftar-timer');
         const qMsg = document.getElementById('quran-message');
@@ -126,7 +164,6 @@
             iftarBadge.style.display = "block";
             qMsg.innerText = "";
 
-            // Iftar Countdown logic
             const [cH, cM] = [now.getHours(), now.getMinutes()];
             const minsToIftar = (17 * 60 + 48) - (cH * 60 + cM);
             if (minsToIftar > 0) {
@@ -159,11 +196,13 @@
     function setLang(lang) {
         currentLang = lang;
         document.querySelectorAll('.lang-btn').forEach((b, i) => {
-            b.classList.toggle('active', (lang === 'en' && i === 0) || (lang === 'ku' && i === 1) || (lang === 'ar' && i === 2));
+            const btnLang = b.getAttribute('onclick').match(/'([^']+)'/)[1];
+            b.classList.toggle('active', btnLang === lang);
         });
         document.getElementById('t-quran').innerText = translations[lang].quran;
         document.getElementById('t-pages').innerText = translations[lang].pages;
         document.getElementById('t-worship').innerText = translations[lang].worship;
+        document.getElementById('dynamic-title').innerText = translations[lang].wisdom;
         update();
     }
 
